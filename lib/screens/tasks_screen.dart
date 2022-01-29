@@ -1,9 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:todoey/widgets/task_tile.dart';
+import './add_task_screen.dart';
 import '../widgets/tasks_list.dart';
+import '../models/task.dart';
 
-class TasksScreen extends StatelessWidget {
-  const TasksScreen({Key? key}) : super(key: key);
+class TasksScreen extends StatefulWidget {
+  @override
+  State<TasksScreen> createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen> {
+  List<Task> taskList = [
+    Task(title: 'Buy Mils'),
+    Task(title: 'Buy Chocolate'),
+    Task(title: 'Buy ramen')
+  ];
+
+  void addTask(String taskTitle) {
+    print(taskTitle);
+    setState(() {
+      taskList.add(Task(title: taskTitle));
+    });
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +29,14 @@ class TasksScreen extends StatelessWidget {
       backgroundColor: Colors.lightBlueAccent,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.lightBlueAccent,
-        onPressed: () {},
+        onPressed: () {
+          showModalBottomSheet(
+            context: context, 
+            builder: (context) => AddTaskScreen(
+              addTask: addTask,
+            ),
+          );
+        },
         child: Icon(Icons.add),
       ),
       body: Column(
@@ -43,7 +68,7 @@ class TasksScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '12 Tasks',
+                  '${taskList.length} Tasks',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -62,7 +87,13 @@ class TasksScreen extends StatelessWidget {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: TasksList(),
+              child: TasksList(
+                  taskList: taskList,
+                  toggleCheckboxState: ({int index = 0, bool? checkboxState}) {
+                    setState(() {
+                      taskList[index].toggleisDone(checkboxState);
+                    });
+                  }),
             ),
           ),
         ],
@@ -70,6 +101,3 @@ class TasksScreen extends StatelessWidget {
     );
   }
 }
-
-
-
