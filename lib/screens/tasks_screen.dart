@@ -1,30 +1,14 @@
 import 'package:flutter/material.dart';
 import './add_task_screen.dart';
 import '../widgets/tasks_list.dart';
-import '../models/task.dart';
+import 'package:provider/provider.dart';
+import '../models/task_provider.dart';
 
-class TasksScreen extends StatefulWidget {
-  @override
-  State<TasksScreen> createState() => _TasksScreenState();
-}
-
-class _TasksScreenState extends State<TasksScreen> {
-  List<Task> taskList = [
-    Task(title: 'Buy Mils'),
-    Task(title: 'Buy Chocolate'),
-    Task(title: 'Buy ramen')
-  ];
-
-  void addTask(String taskTitle) {
-    print(taskTitle);
-    setState(() {
-      taskList.add(Task(title: taskTitle));
-    });
-    Navigator.pop(context);
-  }
-
+class TasksScreen extends StatelessWidget { 
+  
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.lightBlueAccent,
       floatingActionButton: FloatingActionButton(
@@ -32,9 +16,7 @@ class _TasksScreenState extends State<TasksScreen> {
         onPressed: () {
           showModalBottomSheet(
             context: context, 
-            builder: (context) => AddTaskScreen(
-              addTask: addTask,
-            ),
+            builder: (context) => AddTaskScreen(),
           );
         },
         child: Icon(Icons.add),
@@ -68,7 +50,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   ),
                 ),
                 Text(
-                  '${taskList.length} Tasks',
+                  '${Provider.of<TaskProvider>(context).tasksCount} Tasks',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,
@@ -87,13 +69,7 @@ class _TasksScreenState extends State<TasksScreen> {
                   topRight: Radius.circular(20),
                 ),
               ),
-              child: TasksList(
-                  taskList: taskList,
-                  toggleCheckboxState: ({int index = 0, bool? checkboxState}) {
-                    setState(() {
-                      taskList[index].toggleisDone(checkboxState);
-                    });
-                  }),
+              child: TasksList(),
             ),
           ),
         ],

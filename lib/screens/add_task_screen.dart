@@ -1,14 +1,21 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; 
+import 'package:provider/provider.dart';
+import '../models/task_provider.dart';
+
 
 class AddTaskScreen extends StatelessWidget {
 
-  final Function(String) ?addTask;
-  String taskTitle="";  
-
-  AddTaskScreen({this.addTask});
-
+  String taskTitle="";   
+  
   @override
   Widget build(BuildContext context) {
+
+    void addTask() {
+      print(addTask);
+      Provider.of<TaskProvider>(context, listen: false).addTask(taskTitle);
+      Navigator.pop(context);
+    }
+
     return Container(
       color: Color(0xFF757575),
       child: Container(
@@ -52,7 +59,7 @@ class AddTaskScreen extends StatelessWidget {
             SizedBox(height: 5,),
             TextButton(
               onPressed: (){
-                addTask!(taskTitle);
+                addTask();
               },
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.lightBlueAccent),
